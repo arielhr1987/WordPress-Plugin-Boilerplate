@@ -27,15 +27,23 @@
  * @subpackage Plugin_Name/includes
  * @author     Your Name <email@example.com>
  */
-class Plugin_Name {
+class Plugin_Name{
 
 	/**
-	 * The loader that's responsible for maintaining and registering all hooks that power
-	 * the plugin.
+	 * The plugin singleton pattern instance
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      Plugin_Name $instance The singleton pattern instance.
+	 */
+	private static $instance = null;
+
+	/**
+	 * The loader that's responsible for maintaining and registering all hooks that power the plugin.
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      Plugin_Name_Loader    $loader    Maintains and registers all hooks for the plugin.
+	 * @var      Plugin_Name_Loader $loader Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
 
@@ -44,7 +52,7 @@ class Plugin_Name {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      string    $plugin_name    The string used to uniquely identify this plugin.
+	 * @var      string $plugin_name The string used to uniquely identify this plugin.
 	 */
 	protected $plugin_name;
 
@@ -53,9 +61,23 @@ class Plugin_Name {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      string    $version    The current version of the plugin.
+	 * @var      string $version The current version of the plugin.
 	 */
 	protected $version;
+
+	/**
+	 * The singleton pattern
+	 *
+	 * @return self
+	 */
+	public static function instance() {
+		if ( ! isset( self::$instance ) ) {
+			self::$instance = new self();
+			self::$instance->run();
+		}
+
+		return self::$instance;
+	}
 
 	/**
 	 * Define the core functionality of the plugin.
@@ -66,7 +88,7 @@ class Plugin_Name {
 	 *
 	 * @since    1.0.0
 	 */
-	public function __construct() {
+	protected function __construct() {
 		if ( defined( 'PLUGIN_NAME_VERSION' ) ) {
 			$this->version = PLUGIN_NAME_VERSION;
 		} else {
@@ -176,7 +198,7 @@ class Plugin_Name {
 	}
 
 	/**
-	 * Run the loader to execute all of the hooks with WordPress.
+	 * Run the loader to register all of the hooks with WordPress.
 	 *
 	 * @since    1.0.0
 	 */
@@ -188,8 +210,8 @@ class Plugin_Name {
 	 * The name of the plugin used to uniquely identify it within the context of
 	 * WordPress and to define internationalization functionality.
 	 *
-	 * @since     1.0.0
 	 * @return    string    The name of the plugin.
+	 * @since     1.0.0
 	 */
 	public function get_plugin_name() {
 		return $this->plugin_name;
@@ -198,8 +220,8 @@ class Plugin_Name {
 	/**
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
-	 * @since     1.0.0
 	 * @return    Plugin_Name_Loader    Orchestrates the hooks of the plugin.
+	 * @since     1.0.0
 	 */
 	public function get_loader() {
 		return $this->loader;
@@ -208,8 +230,8 @@ class Plugin_Name {
 	/**
 	 * Retrieve the version number of the plugin.
 	 *
-	 * @since     1.0.0
 	 * @return    string    The version number of the plugin.
+	 * @since     1.0.0
 	 */
 	public function get_version() {
 		return $this->version;
